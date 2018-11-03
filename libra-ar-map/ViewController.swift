@@ -11,7 +11,7 @@ import SceneKit
 import ARKit
 
 class ViewController: UIViewController, ARSCNViewDelegate {
-
+    
     @IBOutlet var sceneView: ARSCNView!
     
     override func viewDidLoad() {
@@ -20,14 +20,50 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // Set the view's delegate
         sceneView.delegate = self
         
-        // Show statistics such as fps and timing information
-        sceneView.showsStatistics = true
+        let scene = SCNScene()
         
-        // Create a new scene
-        let scene = SCNScene(named: "art.scnassets/ship.scn")!
+        // make meterial
+        let material = SCNMaterial()
+        material.diffuse.contents = UIImage.init(named: "pokestop")
+        material.diffuse.contents = UIColor.blue
+        
+        // make shape of node
+        let box1 = SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0)
+        let box2 = SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0)
+        let box3 = SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0)
+        let box4 = SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0)
+        
+        box2.firstMaterial?.diffuse.contents  = UIColor(red: 255.0 / 255.0, green: 0.0 / 255.0, blue: 0.0 / 255.0, alpha: 1)
+        box3.firstMaterial?.diffuse.contents  = UIColor(red: 0.0 / 255.0, green: 255.0 / 255.0, blue: 0.0 / 255.0, alpha: 1)
+        box4.firstMaterial?.diffuse.contents  = UIColor(red: 0.0 / 255.0, green: 0.0 / 255.0, blue: 255.0 / 255.0, alpha: 1)
+        
+        //let box1Node = SCNNode()
+        //box1Node.geometry = box1
+        //box1Node.position = SCNVector3(0, 0, 0)
+        
+        let box2Node = SCNNode()
+        box2Node.geometry = box2
+        box2Node.position = SCNVector3(0, 0, -17)
+        
+        let box3Node = SCNNode()
+        box3Node.geometry = box3
+        box3Node.position = SCNVector3(-21, 0, -17)
+        
+        let box4Node = SCNNode()
+        box4Node.geometry = box4
+        box4Node.position = SCNVector3(-21, 0, -12)
+        
+        
+        //scene.rootNode.addChildNode(box1Node)
+        scene.rootNode.addChildNode(box2Node)
+        scene.rootNode.addChildNode(box3Node)
+        scene.rootNode.addChildNode(box4Node)
+        sceneView.scene = scene
+        
+        // TODO: Add more nodes!
         
         // Set the scene to the view
-        sceneView.scene = scene
+        self.sceneView.scene = scene
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -35,41 +71,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         // Create a session configuration
         let configuration = ARWorldTrackingConfiguration()
-
+        
         // Run the view's session
         sceneView.session.run(configuration)
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        
-        // Pause the view's session
-        sceneView.session.pause()
-    }
-
-    // MARK: - ARSCNViewDelegate
-    
-/*
-    // Override to create and configure nodes for anchors added to the view's session.
-    func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
-        let node = SCNNode()
-     
-        return node
-    }
-*/
-    
-    func session(_ session: ARSession, didFailWithError error: Error) {
-        // Present an error message to the user
-        
-    }
-    
-    func sessionWasInterrupted(_ session: ARSession) {
-        // Inform the user that the session has been interrupted, for example, by presenting an overlay
-        
-    }
-    
-    func sessionInterruptionEnded(_ session: ARSession) {
-        // Reset tracking and/or remove existing anchors if consistent tracking is required
-        
     }
 }
